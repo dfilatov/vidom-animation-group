@@ -6,8 +6,8 @@ export default class AnimationGroup extends Component {
         this._appearingKeys = {};
         this._enteringKeys = {};
         this._leavingKeys = {};
-        this._keysToAdd = null;
-        this._keysToRemove = null;
+        this._keysToEnter = null;
+        this._keysToLeave = null;
     }
 
     onInitialStateRequest(_, children) {
@@ -50,8 +50,8 @@ export default class AnimationGroup extends Component {
         children.forEach(child => {
             const key = child._key;
 
-            if(!nextKeys[key]) {
-                (this._keysToRemove || (this._keysToRemove = {}))[key] = true;
+            if(!nextKeys[key] && !this._leavingKeys[key]) {
+                (this._keysToLeave || (this._keysToLeave = {}))[key] = true;
             }
         });
 
@@ -59,7 +59,7 @@ export default class AnimationGroup extends Component {
             const key = child._key;
 
             if(!currentKeys[key] || this._leavingKeys[key]) {
-                (this._keysToAdd || (this._keysToAdd = {}))[key] = true;
+                (this._keysToEnter || (this._keysToEnter = {}))[key] = true;
             }
         });
 
@@ -67,14 +67,14 @@ export default class AnimationGroup extends Component {
     }
 
     onUpdate(attrs) {
-        if(!this._keysToAdd && !this._keysToRemove) {
+        if(!this._keysToEnter && !this._keysToLeave) {
             return;
         }
 
         this.getState().children.forEach(child => {
             const key = child._key;
 
-            if(this._keysToAdd && this._keysToAdd[key]) {
+            if(this._keysToEnter && this._keysToEnter[key]) {
                 if(this._leavingKeys[key]) {
                     this._leavingKeys[key]();
                     delete this._leavingKeys[key];
@@ -89,7 +89,7 @@ export default class AnimationGroup extends Component {
                     };
                 }
             }
-            else if(this._keysToRemove && this._keysToRemove[key]) {
+            else if(this._keysToLeave && this._keysToLeave[key]) {
                 if(this._appearingKeys[key]) {
                     this._appearingKeys[key]();
                     delete this._appearingKeys[key];
@@ -113,8 +113,8 @@ export default class AnimationGroup extends Component {
             }
         });
 
-        this._keysToAdd = null;
-        this._keysToRemove = null;
+        this._keysToEnter = null;
+        this._keysToLeave = null;
     }
 
     _onAppeared(key) {

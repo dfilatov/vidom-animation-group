@@ -85,6 +85,27 @@ describe('AnimationGroup', () => {
         expect(spy.secondCall.calledWith(document.getElementById('id4'))).to.be.ok();
     });
 
+    it('should not call onLeave callback if item is already leaving', () => {
+        const spy = sinon.spy();
+
+        mountToDomSync(
+            domNode,
+            node(AnimationGroup)
+                .children(node('div').key('a').attrs({ id : 'id1' })));
+
+        mountToDomSync(
+            domNode,
+            node(AnimationGroup)
+                .attrs({ onLeave : spy }));
+
+        mountToDomSync(
+            domNode,
+            node(AnimationGroup)
+                .attrs({ onLeave : spy }));
+
+        expect(spy.calledOnce).to.be.ok();
+    });
+
     it('should remove item after animation', done => {
         mountToDomSync(
             domNode,
