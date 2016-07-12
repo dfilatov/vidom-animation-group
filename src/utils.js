@@ -22,6 +22,14 @@ export function collectChildrenKeys(children) {
 }
 
 export function mergeChildren(currentChildren, nextChildren, nextKeys) {
+    if(!currentChildren.length) {
+        return nextChildren;
+    }
+
+    if(!nextChildren.length) {
+        return currentChildren;
+    }
+
     const nextChildrenPending = {};
     let pendingChildren = [];
 

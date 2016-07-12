@@ -4,18 +4,20 @@ import { childrenToArray, checkChildrenKeys, collectChildrenKeys, mergeChildren 
 export default class AnimationGroup extends Component {
     onInit() {
         this._appearingKeys = {};
-        this._addingKeys = {};
-        this._removingKeys = {};
+        this._enteringKeys = {};
+        this._leavingKeys = {};
         this._keysToAdd = null;
         this._keysToRemove = null;
     }
 
     onInitialStateRequest(_, children) {
+        children = childrenToArray(children);
+
         if(IS_DEBUG) {
             checkChildrenKeys(children);
         }
 
-        return { children : childrenToArray(children) };
+        return { children };
     }
 
     onRender() {
@@ -56,7 +58,7 @@ export default class AnimationGroup extends Component {
         nextChildren.forEach(child => {
             const key = child._key;
 
-            if(!currentKeys[key] || this._removingKeys[key]) {
+            if(!currentKeys[key] || this._leavingKeys[key]) {
                 (this._keysToAdd || (this._keysToAdd = {}))[key] = true;
             }
         });
@@ -73,14 +75,14 @@ export default class AnimationGroup extends Component {
             const key = child._key;
 
             if(this._keysToAdd && this._keysToAdd[key]) {
-                if(this._removingKeys[key]) {
-                    this._removingKeys[key]();
-                    delete this._removingKeys[key];
+                if(this._leavingKeys[key]) {
+                    this._leavingKeys[key]();
+                    delete this._leavingKeys[key];
                 }
 
                 if(attrs.onEnter) {
-                    this._addingKeys = {
-                        ...this._addingKeys,
+                    this._enteringKeys = {
+                        ...this._enteringKeys,
                         [key] : attrs.onEnter && attrs.onEnter(child.getDomNode(), () => {
                             this._onEntered(key);
                         }) || noop
@@ -92,19 +94,21 @@ export default class AnimationGroup extends Component {
                     this._appearingKeys[key]();
                     delete this._appearingKeys[key];
                 }
-
-                if(this._addingKeys[key]) {
-                    this._addingKeys[key]();
-                    delete this._addingKeys[key];
+                else if(this._enteringKeys[key]) {
+                    this._enteringKeys[key]();
+                    delete this._enteringKeys[key];
                 }
 
                 if(attrs.onLeave) {
-                    this._removingKeys = {
-                        ...this._removingKeys,
+                    this._leavingKeys = {
+                        ...this._leavingKeys,
                         [key] : attrs.onLeave(child.getDomNode(), () => {
                             this._onLeft(key);
                         }) || noop
                     };
+                }
+                else {
+                    this._removeChildByKey(key);
                 }
             }
         });
@@ -114,21 +118,22 @@ export default class AnimationGroup extends Component {
     }
 
     _onAppeared(key) {
-        // console.log('appeared', key);
         delete this._appearingKeys[key];
     }
 
     _onEntered(key) {
-        // console.log('entered', key);
-        delete this._addingKeys[key];
+        delete this._enteringKeys[key];
     }
 
     _onLeft(key) {
-        if(this._removingKeys[key]) {
-            // console.log('left', key);
-            delete this._removingKeys[key];
-            this.setState({ children : this.getState().children.filter(child => child._key !== key) });
+        if(this._leavingKeys[key]) {
+            delete this._leavingKeys[key];
+            this._removeChildByKey(key);
         }
+    }
+
+    _removeChildByKey(key) {
+        this.setState({ children : this.getState().children.filter(child => child._key !== key) });
     }
 }
 
