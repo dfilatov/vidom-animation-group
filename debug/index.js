@@ -1,5 +1,5 @@
 import { Component, mountToDom, unmountFromDom, node } from 'vidom';
-import AnimationGroup from '../src/AnimationGroup';
+import { AnimationGroup } from '../src';
 
 class App extends Component {
     onInitialStateRequest() {
