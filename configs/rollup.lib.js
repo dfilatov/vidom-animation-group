@@ -7,8 +7,7 @@ export default {
     plugins : [
         babel({
             babelrc : false,
-            presets : ['es2015-loose-rollup'],
-            plugins : ['transform-object-rest-spread']
+            presets : ['es2015-loose-rollup']
         })
     ]
 };

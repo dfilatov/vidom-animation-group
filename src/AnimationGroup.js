@@ -81,12 +81,9 @@ export default class AnimationGroup extends Component {
                 }
 
                 if(attrs.onEnter) {
-                    this._enteringKeys = {
-                        ...this._enteringKeys,
-                        [key] : attrs.onEnter && attrs.onEnter(child.getDomNode(), () => {
-                            this._onEntered(key);
-                        }) || noop
-                    };
+                    this._enteringKeys[key] = attrs.onEnter && attrs.onEnter(child.getDomNode(), () => {
+                        this._onEntered(key);
+                    }) || noop;
                 }
             }
             else if(this._keysToLeave && this._keysToLeave[key]) {
@@ -100,12 +97,9 @@ export default class AnimationGroup extends Component {
                 }
 
                 if(attrs.onLeave) {
-                    this._leavingKeys = {
-                        ...this._leavingKeys,
-                        [key] : attrs.onLeave(child.getDomNode(), () => {
-                            this._onLeft(key);
-                        }) || noop
-                    };
+                    this._leavingKeys[key] = attrs.onLeave(child.getDomNode(), () => {
+                        this._onLeft(key);
+                    }) || noop;
                 }
                 else {
                     this._removeChildByKey(key);
