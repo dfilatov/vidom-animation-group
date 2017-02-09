@@ -4,17 +4,17 @@ import { collectChildrenKeys, mergeChildren } from '../../src/utils';
 describe('mergeChildren', () => {
     it('should properly merge non-empty current and non-empty next children', () => {
         const currentChildren = [
-                node('div').key('c'),
-                node('div').key('d'),
-                node('div').key('e'),
-                node('div').key('g'),
-                node('div').key('h')
+                node('div').setKey('c'),
+                node('div').setKey('d'),
+                node('div').setKey('e'),
+                node('div').setKey('g'),
+                node('div').setKey('h')
             ],
             nextChildren = [
-                node('span').key('a'),
-                node('span').key('b'),
-                node('span').key('e'),
-                node('span').key('f')
+                node('span').setKey('a'),
+                node('span').setKey('b'),
+                node('span').setKey('e'),
+                node('span').setKey('f')
             ];
 
         expect(mergeChildren(currentChildren, nextChildren, collectChildrenKeys(nextChildren)))
@@ -33,8 +33,8 @@ describe('mergeChildren', () => {
     it('should properly merge empty current and non-empty next children', () => {
         const currentChildren = [],
             nextChildren = [
-                node('span').key('a'),
-                node('span').key('b')
+                node('span').setKey('a'),
+                node('span').setKey('b')
             ];
 
         expect(mergeChildren(currentChildren, nextChildren, collectChildrenKeys(nextChildren)))
@@ -43,8 +43,8 @@ describe('mergeChildren', () => {
 
     it('should properly merge non-empty current and empty next children', () => {
         const currentChildren = [
-                node('div').key('a'),
-                node('div').key('b')
+                node('div').setKey('a'),
+                node('div').setKey('b')
             ],
             nextChildren = [];
 

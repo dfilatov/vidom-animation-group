@@ -8,7 +8,7 @@ export function childrenToArray(children) {
 
 export function checkChildrenKeys(children) {
     children.forEach(child => {
-        if(child._key == null) {
+        if(child.key == null) {
             console.error('You must specify a key for each child of AnimationGroup.')
         }
     });
@@ -16,7 +16,7 @@ export function checkChildrenKeys(children) {
 
 export function collectChildrenKeys(children) {
     return children.reduce((res, child) => {
-        res[child._key] = child;
+        res[child.key] = child;
         return res;
     }, {});
 }
@@ -34,9 +34,9 @@ export function mergeChildren(currentChildren, nextChildren, nextKeys) {
     let pendingChildren = [];
 
     currentChildren.forEach(child => {
-        if(nextKeys[child._key]) {
+        if(nextKeys[child.key]) {
             if(pendingChildren.length) {
-                nextChildrenPending[child._key] = pendingChildren;
+                nextChildrenPending[child.key] = pendingChildren;
                 pendingChildren = [];
             }
         }
@@ -47,8 +47,8 @@ export function mergeChildren(currentChildren, nextChildren, nextKeys) {
 
     return nextChildren
         .reduce((res, child) => {
-            if(nextChildrenPending[child._key]) {
-                res = res.concat(nextChildrenPending[child._key]);
+            if(nextChildrenPending[child.key]) {
+                res = res.concat(nextChildrenPending[child.key]);
             }
 
             res.push(child);

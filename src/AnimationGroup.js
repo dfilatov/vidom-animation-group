@@ -8,47 +8,47 @@ export default class AnimationGroup extends Component {
         this._leavingKeys = {};
         this._keysToEnter = null;
         this._keysToLeave = null;
-    }
 
-    onInitialStateRequest(_, children) {
-        children = childrenToArray(children);
+        const children = childrenToArray(this.children);
 
         if(IS_DEBUG) {
             checkChildrenKeys(children);
         }
 
-        return { children };
+        this.setState({ children });
     }
 
     onRender() {
-        return node('fragment').children(this.getState().children);
+        return node('fragment').setChildren(this.state.children);
     }
 
-    onMount({ onAppear }) {
+    onMount() {
+        const { onAppear } = this.attrs;
+
         if(onAppear) {
-            this.getState().children.forEach(child => {
-                const key = child._key;
+            this.state.children.forEach(child => {
+                const { key } = child;
 
                 this._appearingKeys[key] = onAppear(child.getDomNode(), () => {
                     this._onAppeared(key);
-                }) || noop
+                }) || noOp
             });
         }
     }
 
-    onAttrsReceive(nextAttrs, prevAttrs, nextChildren) {
-        nextChildren = childrenToArray(nextChildren);
+    onChildrenChange() {
+        const nextChildren = childrenToArray(this.children);
 
         if(IS_DEBUG) {
             checkChildrenKeys(nextChildren);
         }
 
-        const { children } = this.getState(),
+        const { children } = this.state,
             nextKeys = collectChildrenKeys(nextChildren),
             currentKeys = collectChildrenKeys(children);
 
         children.forEach(child => {
-            const key = child._key;
+            const { key } = child;
 
             if(!nextKeys[key] && !this._leavingKeys[key]) {
                 (this._keysToLeave || (this._keysToLeave = {}))[key] = true;
@@ -56,7 +56,7 @@ export default class AnimationGroup extends Component {
         });
 
         nextChildren.forEach(child => {
-            const key = child._key;
+            const { key } = child;
 
             if(!currentKeys[key] || this._leavingKeys[key]) {
                 (this._keysToEnter || (this._keysToEnter = {}))[key] = true;
@@ -66,13 +66,15 @@ export default class AnimationGroup extends Component {
         this.setState({ children : mergeChildren(children, nextChildren, nextKeys) });
     }
 
-    onUpdate(attrs) {
+    onUpdate() {
         if(!this._keysToEnter && !this._keysToLeave) {
             return;
         }
 
-        this.getState().children.forEach(child => {
-            const key = child._key;
+        const { onEnter, onLeave } = this.attrs;
+
+        this.state.children.forEach(child => {
+            const { key } = child;
 
             if(this._keysToEnter && this._keysToEnter[key]) {
                 if(this._leavingKeys[key]) {
@@ -80,10 +82,10 @@ export default class AnimationGroup extends Component {
                     delete this._leavingKeys[key];
                 }
 
-                if(attrs.onEnter) {
-                    this._enteringKeys[key] = attrs.onEnter && attrs.onEnter(child.getDomNode(), () => {
+                if(onEnter) {
+                    this._enteringKeys[key] = onEnter(child.getDomNode(), () => {
                         this._onEntered(key);
-                    }) || noop;
+                    }) || noOp;
                 }
             }
             else if(this._keysToLeave && this._keysToLeave[key]) {
@@ -96,10 +98,10 @@ export default class AnimationGroup extends Component {
                     delete this._enteringKeys[key];
                 }
 
-                if(attrs.onLeave) {
-                    this._leavingKeys[key] = attrs.onLeave(child.getDomNode(), () => {
+                if(onLeave) {
+                    this._leavingKeys[key] = onLeave(child.getDomNode(), () => {
                         this._onLeft(key);
-                    }) || noop;
+                    }) || noOp;
                 }
                 else {
                     this._removeChildByKey(key);
@@ -127,8 +129,8 @@ export default class AnimationGroup extends Component {
     }
 
     _removeChildByKey(key) {
-        this.setState({ children : this.getState().children.filter(child => child._key !== key) });
+        this.setState({ children : this.state.children.filter(child => child.key !== key) });
     }
 }
 
-function noop() {}
+function noOp() {}
