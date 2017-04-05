@@ -36,7 +36,7 @@ export default class AnimationGroup extends Component {
         }
     }
 
-    onChildrenChange() {
+    onChildrenReceive() {
         const nextChildren = childrenToArray(this.children);
 
         if(IS_DEBUG) {

@@ -16,7 +16,7 @@
     "lib"
   ],
   "dependencies": {
-    "vidom": "^0.8.0"
+    "vidom": "^0.9.1"
   },
   "devDependencies": {
     "babel-core": "6.10.4",
