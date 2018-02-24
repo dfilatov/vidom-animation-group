@@ -1,20 +1,20 @@
-import { node } from 'vidom';
+import { elem } from 'vidom';
 import { collectChildrenKeys, mergeChildren } from '../../src/utils';
 
 describe('mergeChildren', () => {
     it('should properly merge non-empty current and non-empty next children', () => {
         const currentChildren = [
-                node('div').setKey('c'),
-                node('div').setKey('d'),
-                node('div').setKey('e'),
-                node('div').setKey('g'),
-                node('div').setKey('h')
+                elem('div', 'c'),
+                elem('div', 'd'),
+                elem('div', 'e'),
+                elem('div', 'g'),
+                elem('div', 'h')
             ],
             nextChildren = [
-                node('span').setKey('a'),
-                node('span').setKey('b'),
-                node('span').setKey('e'),
-                node('span').setKey('f')
+                elem('span', 'a'),
+                elem('span', 'b'),
+                elem('span', 'e'),
+                elem('span', 'f')
             ];
 
         expect(mergeChildren(currentChildren, nextChildren, collectChildrenKeys(nextChildren)))
@@ -33,8 +33,8 @@ describe('mergeChildren', () => {
     it('should properly merge empty current and non-empty next children', () => {
         const currentChildren = [],
             nextChildren = [
-                node('span').setKey('a'),
-                node('span').setKey('b')
+                elem('span', 'a'),
+                elem('span', 'b')
             ];
 
         expect(mergeChildren(currentChildren, nextChildren, collectChildrenKeys(nextChildren)))
@@ -43,8 +43,8 @@ describe('mergeChildren', () => {
 
     it('should properly merge non-empty current and empty next children', () => {
         const currentChildren = [
-                node('div').setKey('a'),
-                node('div').setKey('b')
+                elem('div', 'a'),
+                elem('div', 'b')
             ],
             nextChildren = [];
 

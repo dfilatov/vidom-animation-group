@@ -1,4 +1,4 @@
-import { Component, node, IS_DEBUG } from 'vidom';
+import { Component, IS_DEBUG } from 'vidom';
 import { childrenToArray, checkChildrenKeys, collectChildrenKeys, mergeChildren } from './utils';
 
 export default class AnimationGroup extends Component {
@@ -19,7 +19,7 @@ export default class AnimationGroup extends Component {
     }
 
     onRender() {
-        return node('fragment').setChildren(this.state.children);
+        return this.state.children;
     }
 
     onMount() {
@@ -36,7 +36,11 @@ export default class AnimationGroup extends Component {
         }
     }
 
-    onChildrenReceive() {
+    onChange(prevAttrs, prevChildren) {
+        if(this.children === prevChildren) {
+            return;
+        }
+
         const nextChildren = childrenToArray(this.children);
 
         if(IS_DEBUG) {

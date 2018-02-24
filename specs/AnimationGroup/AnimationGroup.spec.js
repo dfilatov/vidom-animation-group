@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { mountSync, unmountSync, node } from 'vidom';
+import { mountSync, unmountSync, elem } from 'vidom';
 import AnimationGroup from '../../src/AnimationGroup';
 
 describe('AnimationGroup', () => {
@@ -19,11 +19,13 @@ describe('AnimationGroup', () => {
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setAttrs({ onAppear : spy })
-                .setChildren([
-                    node('div').setKey('a').setAttrs({ id : 'id1' }),
-                    node('div').setKey('b').setAttrs({ id : 'id2' })
+            elem(
+                AnimationGroup,
+                null,
+                { onAppear : spy },
+                [
+                    elem('div', 'a', { id : 'id1' }),
+                    elem('div', 'b', { id : 'id2' })
                 ]));
 
         expect(spy.calledTwice).to.be.ok();
@@ -36,21 +38,26 @@ describe('AnimationGroup', () => {
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setChildren([
-                    node('div').setKey('a').setAttrs({ id : 'id1' }),
-                    node('div').setKey('c').setAttrs({ id : 'id3' })
+            elem(
+                AnimationGroup,
+                null,
+                null,
+                [
+                    elem('div', 'a', { id : 'id1' }),
+                    elem('div', 'c', { id : 'id3' })
                 ]));
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setAttrs({ onEnter : spy })
-                .setChildren([
-                    node('div').setKey('a').setAttrs({ id : 'id1' }),
-                    node('div').setKey('b').setAttrs({ id : 'id2' }),
-                    node('div').setKey('c').setAttrs({ id : 'id3' }),
-                    node('div').setKey('d').setAttrs({ id : 'id4' })
+            elem(
+                AnimationGroup,
+                null,
+                { onEnter : spy },
+                [
+                    elem('div', 'a', { id : 'id1' }),
+                    elem('div', 'b', { id : 'id2' }),
+                    elem('div', 'c', { id : 'id3' }),
+                    elem('div', 'd', { id : 'id4' })
                 ]));
 
         expect(spy.calledTwice).to.be.ok();
@@ -63,21 +70,26 @@ describe('AnimationGroup', () => {
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setChildren([
-                    node('div').setKey('a').setAttrs({ id : 'id1' }),
-                    node('div').setKey('b').setAttrs({ id : 'id2' }),
-                    node('div').setKey('c').setAttrs({ id : 'id3' }),
-                    node('div').setKey('d').setAttrs({ id : 'id4' })
+            elem(
+                AnimationGroup,
+                null,
+                null,
+                [
+                    elem('div', 'a', { id : 'id1' }),
+                    elem('div', 'b', { id : 'id2' }),
+                    elem('div', 'c', { id : 'id3' }),
+                    elem('div', 'd', { id : 'id4' })
                 ]));
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setAttrs({ onLeave : spy })
-                .setChildren([
-                    node('div').setKey('a').setAttrs({ id : 'id1' }),
-                    node('div').setKey('c').setAttrs({ id : 'id3' })
+            elem(
+                AnimationGroup,
+                null,
+                { onLeave : spy },
+                [
+                    elem('div', 'a', { id : 'id1' }),
+                    elem('div', 'c', { id : 'id3' })
                 ]));
 
         expect(spy.calledTwice).to.be.ok();
@@ -90,18 +102,15 @@ describe('AnimationGroup', () => {
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setChildren(node('div').setKey('a').setAttrs({ id : 'id1' })));
+            elem(AnimationGroup, null, null, elem('div', 'a', { id : 'id1' })));
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setAttrs({ onLeave : spy }));
+            elem(AnimationGroup, null, { onLeave : spy }));
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setAttrs({ onLeave : spy }));
+            elem(AnimationGroup, null, { onLeave : spy }));
 
         expect(spy.calledOnce).to.be.ok();
     });
@@ -109,20 +118,25 @@ describe('AnimationGroup', () => {
     it('should remove item after animation', done => {
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setChildren([
-                    node('div').setKey('a').setAttrs({ id : 'id1' }),
-                    node('div').setKey('b').setAttrs({ id : 'id2' }),
-                    node('div').setKey('c').setAttrs({ id : 'id3' })
+            elem(
+                AnimationGroup,
+                null,
+                null,
+                [
+                    elem('div', 'a', { id : 'id1' }),
+                    elem('div', 'b', { id : 'id2' }),
+                    elem('div', 'c', { id : 'id3' })
                 ]));
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setAttrs({ onLeave : (_, onLeft) => { setTimeout(onLeft, 30); } })
-                .setChildren([
-                    node('div').setKey('a').setAttrs({ id : 'id1' }),
-                    node('div').setKey('c').setAttrs({ id : 'id3' })
+            elem(
+                AnimationGroup,
+                null,
+                { onLeave : (_, onLeft) => { setTimeout(onLeft, 30); } },
+                [
+                    elem('div', 'a', { id : 'id1' }),
+                    elem('div', 'c', { id : 'id3' })
                 ]));
 
         const domNodeToRemove = document.getElementById('id2');
@@ -139,18 +153,18 @@ describe('AnimationGroup', () => {
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setAttrs({
+            elem(
+                AnimationGroup,
+                null,
+                {
                     onAppear : (_, onAppeared) => {
                         setTimeout(onAppeared, 30);
                         return spy;
                     }
-                })
-                .setChildren(node('div').setKey('a')));
+                },
+                elem('div', 'a')));
 
-        mountSync(
-            domNode,
-            node(AnimationGroup));
+        mountSync(domNode, elem(AnimationGroup));
 
         setTimeout(() => {
             expect(spy.called).to.be.ok();
@@ -161,24 +175,22 @@ describe('AnimationGroup', () => {
     it('should call stop callback if leaving causes during entering', done => {
         const spy = sinon.spy();
 
-        mountSync(
-            domNode,
-            node(AnimationGroup));
+        mountSync(domNode, elem(AnimationGroup));
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setAttrs({
+            elem(
+                AnimationGroup,
+                null,
+                {
                     onEnter : (_, onEntered) => {
                         setTimeout(onEntered, 30);
                         return spy;
                     }
-                })
-                .setChildren(node('div').setKey('a')));
+                },
+                elem('div', 'a')));
 
-        mountSync(
-            domNode,
-            node(AnimationGroup));
+        mountSync(domNode, elem(AnimationGroup));
 
         setTimeout(() => {
             expect(spy.called).to.be.ok();
@@ -191,13 +203,14 @@ describe('AnimationGroup', () => {
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setChildren(node('div').setKey('a')));
+            elem(AnimationGroup, null, null, elem('div', 'a')));
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setAttrs({
+            elem(
+                AnimationGroup,
+                null,
+                {
                     onLeave : (_, onLeft) => {
                         setTimeout(onLeft, 30);
                         return spy;
@@ -206,8 +219,11 @@ describe('AnimationGroup', () => {
 
         mountSync(
             domNode,
-            node(AnimationGroup)
-                .setChildren(node('div').setKey('a')));
+            elem(
+                AnimationGroup,
+                null,
+                null,
+                elem('div', 'a')));
 
         setTimeout(() => {
             expect(spy.called).to.be.ok();
