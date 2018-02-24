@@ -1,6 +1,6 @@
 {
   "name": "vidom-animation-group",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Animation helper for vidom",
   "keywords": [
     "vidom",
