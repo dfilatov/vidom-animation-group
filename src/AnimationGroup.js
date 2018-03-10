@@ -1,5 +1,5 @@
-import { Component, IS_DEBUG } from 'vidom';
-import { childrenToArray, checkChildrenKeys, collectChildrenKeys, mergeChildren } from './utils';
+import { Component, toElems, IS_DEBUG } from 'vidom';
+import { checkChildrenKeys, collectChildrenKeys, mergeChildren } from './utils';
 
 export default class AnimationGroup extends Component {
     onInit() {
@@ -9,7 +9,7 @@ export default class AnimationGroup extends Component {
         this._keysToEnter = null;
         this._keysToLeave = null;
 
-        const children = childrenToArray(this.children);
+        const children = toElems(this.children);
 
         if(IS_DEBUG) {
             checkChildrenKeys(children);
@@ -41,7 +41,7 @@ export default class AnimationGroup extends Component {
             return;
         }
 
-        const nextChildren = childrenToArray(this.children);
+        const nextChildren = toElems(this.children);
 
         if(IS_DEBUG) {
             checkChildrenKeys(nextChildren);

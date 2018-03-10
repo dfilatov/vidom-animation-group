@@ -1,11 +1,5 @@
 import { console } from 'vidom';
 
-export function childrenToArray(children) {
-    return children?
-        Array.isArray(children)? children : [children] :
-        [];
-}
-
 export function checkChildrenKeys(children) {
     children.forEach(child => {
         if(child.key == null) {
