@@ -1,13 +1,13 @@
 import babel from 'rollup-plugin-babel';
+import pkg from '../package.json';
 
 export default {
-    format : 'cjs',
-    entry : 'src/index.js',
-    dest : 'lib/index.js',
+    input : 'src/index.js',
+    output : {
+        file : pkg.main,
+        format : 'cjs'
+    },
     plugins : [
-        babel({
-            babelrc : false,
-            presets : ['es2015-loose-rollup']
-        })
+        babel()
     ]
 };

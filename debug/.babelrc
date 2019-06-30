@@ -1,3 +1,4 @@
 {
+  "plugins": ["vidom-jsx"],
   "presets": [["@babel/preset-env", { "loose": true }]]
 }

@@ -1,17 +1,23 @@
-import { Component, mountToDom, unmountFromDom, node } from 'vidom';
+import { Component, mount } from 'vidom';
 import { AnimationGroup } from '../src';
 
 class App extends Component {
-    onInitialStateRequest() {
-        return {
+    onInit() {
+        this.setState({
             list : [1, 2, 3, 4]
-        };
+        });
     }
 
     onRender() {
-        return node(AnimationGroup)
-            .attrs({ onAppear : this._onItemAppear, onEnter : this._onItemEnter, onLeave : this._onItemLeave })
-            .children(this.getState().list.map(i => node('div').attrs({ 'class' : 'item' }).key(i).children(i)));
+        return (
+            <AnimationGroup
+                onAppear={ this._onItemAppear }
+                onEnter={ this._onItemEnter }
+                onLeave={ this._onItemLeave }
+            >
+                { this.state.list.map(i => <div class="item" key={ i }>{ i }</div>) }
+            </AnimationGroup>
+        );
     }
 
     _onItemAppear(domNode, onAppeared) {
@@ -61,4 +67,4 @@ function buildTransition(domNode, classFrom, classTo, cb) {
 
 const root = document.getElementById('root');
 
-mountToDom(root, node(App));
+mount(root, <App/>);

@@ -1,6 +1,5 @@
-var jsLoaders = ['babel'];
-
 module.exports = {
+    mode : 'development',
     entry : __dirname + '/index.js',
     output : {
         path : __dirname + '/debug',
@@ -8,8 +7,8 @@ module.exports = {
         publicPath : '/debug/'
     },
     module : {
-        loaders: [
-            { test : /\.js$/, loaders : jsLoaders }
+        rules : [
+            { test : /\.js$/, loader : 'babel-loader' }
         ]
     }
 };
