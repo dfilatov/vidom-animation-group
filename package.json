@@ -34,7 +34,7 @@
     "rollup-plugin-babel": "4.3.3",
     "sinon": "1.17.4",
     "webpack": "4.35.0",
-    "webpack-cli": "3.3.5",
+    "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.7.2"
   },
   "license": "MIT",
